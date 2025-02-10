@@ -1,3 +1,4 @@
+from app.models.inventory import Inventario
 from app.models.product import Producto
 from app.database import SessionLocal
 
@@ -30,8 +31,13 @@ class ProductRepository:
         producto = self.get_by_id(product_id)
         if not producto:
             return None
+
         for key, value in product_data.items():
+            if key == "inventario" and isinstance(value, int):  # Si se pasa un ID en lugar de una relación
+                value = self.db.query(Inventario).filter_by(id=value).first()
+            
             setattr(producto, key, value)
+
         self.db.commit()
         return producto
 

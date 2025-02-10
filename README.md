@@ -1,94 +1,146 @@
-# 📦 API de Productos e Inventario
+# 📦 API de Gestión de Inventarios y Productos
 
-## 📖 Descripción
-Esta API en Flask permite gestionar productos e inventarios, incluyendo operaciones CRUD y generación de gráficos de ventas. Se conecta a una base de datos PostgreSQL y cuenta con análisis de datos.
-
----
-
-## 🚀 Instalación y Ejecución
-
-### 🔹 Requisitos Previos
-- Python 3.9+
-- PostgreSQL
-- Docker y Docker Compose (opcional, si se ejecuta con contenedores)
-
-### 🏗️ Instalación Manual (Sin Docker)
-
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/tu-repositorio.git
-   cd tu-repositorio
-   ```
-
-2. Crear un entorno virtual y activarlo:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # En Windows: venv\Scripts\activate
-   ```
-
-3. Instalar dependencias:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Configurar variables de entorno:
-   Crear un archivo `.env` y definir:
-   ```env
-   DATABASE_URL=postgresql://usuario:password@localhost:5432/tu_base_de_datos
-   ```
-
-5. Ejecutar la aplicación:
-   ```bash
-   flask run
-   ```
+## 🛠️ Descripción
+Esta API permite gestionar productos e inventarios, proporcionando funciones para agregar, actualizar, eliminar y consultar información sobre productos y su inventario. También incluye endpoints para análisis de datos y generación de gráficos.
 
 ---
 
-### 🐳 Ejecución con Docker
+## 🚀 Instalación y Ejecución con Docker
 
-1. Construir y levantar los contenedores:
-   ```bash
-   docker-compose up --build
-   ```
+### 1️⃣ **Clonar el repositorio**
+```sh
+ git clone https://github.com/tu-repositorio.git
+ cd tu-repositorio
+```
 
-2. La API estará disponible en:
-   ```
-   http://localhost:5000
-   ```
-
-3. Para detener los contenedores:
-   ```bash
-   docker-compose down
-   ```
+### 2️⃣ **Ejecutar con Docker**
+```sh
+docker-compose up --build
+```
+Esto iniciará la aplicación Flask junto con PostgreSQL.
 
 ---
 
-## 📌 Endpoints
+## 🛠️ **Rutas Disponibles**
 
-### 📦 Productos
-- **Obtener productos:** `GET /productos`
-- **Crear producto:** `POST /productos`
-- **Actualizar producto:** `PUT /productos/{id}`
-- **Eliminar producto:** `DELETE /productos/{id}`
-- **Generar gráfico de ventas:** `GET /productos/grafico`
+### 🛒 **Productos**
 
-### 📦 Inventario
-- **Obtener inventario:** `GET /inventarios`
-- **Obtener inventario de un producto:** `GET /inventario/{product_id}`
-- **Actualizar stock de inventario:** `PUT /inventario/{product_id}`
-- **Verificar reabastecimiento:** `GET /inventario/reabastecimiento/{product_id}`
+📌 **Obtener todos los productos**
+```sh
+curl -X GET http://localhost:5000/productos
+```
 
-### 📊 Análisis de Datos
-- **Clasificación de ventas:** `GET /clasificacion-ventas`
-- **Desviación estándar:** `GET /desviacion-estandar`
-- **Generar reportes:** `GET /reporte`
-- **Generar gráficos:** `GET /graficos`
+📌 **Agregar un nuevo producto**
+```sh
+curl -X POST http://localhost:5000/productos \
+     -H "Content-Type: application/json" \
+     -d '{
+        "nombre": "Laptop Gamer",
+        "ventas": 50,
+        "descripcion": "Intel i7, 16GB RAM, SSD 512GB"
+        }
+'
+```
+
+📌 **Actualizar un producto**
+```sh
+curl -X PUT http://localhost:5000/productos/1 \
+     -H "Content-Type: application/json" \
+     -d '{
+           "nombre": "Laptop Pro",
+           "ventas": 250,
+           "inventario": 40
+         }'
+```
+
+📌 **Eliminar un producto**
+```sh
+curl -X DELETE http://localhost:5000/productos/1
+```
+
+📌 **Generar gráfico de ventas por producto**
+```sh
+curl -X GET http://localhost:5000/productos/grafico
+```
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
-- Python + Flask
+### 📦 **Inventarios**
+
+📌 **Obtener todos los inventarios**
+```sh
+curl -X GET http://localhost:5000/inventarios
+```
+
+📌 **Agregar un inventario**
+```sh
+curl -X POST http://localhost:5000/inventarios \
+     -H "Content-Type: application/json" \
+     -d '{
+           "producto_id": 1,
+           "stock_actual": 100,
+           "demanda_proyectada": 50,
+           "costo_mantenimiento": 15.75
+         }'
+```
+
+📌 **Obtener inventario de un producto**
+```sh
+curl -X GET http://localhost:5000/inventario/1
+```
+
+📌 **Actualizar stock de un inventario**
+```sh
+curl -X PUT http://localhost:5000/inventario/1 \
+     -H "Content-Type: application/json" \
+     -d '{
+           "stock_actual": 120
+         }'
+```
+
+📌 **Verificar si un producto necesita reabastecimiento**
+```sh
+curl -X GET http://localhost:5000/inventario/reabastecimiento/1
+```
+
+---
+
+### 📊 **Análisis de Datos**
+
+📌 **Clasificación de ventas**
+```sh
+curl -X GET http://localhost:5000/clasificacion-ventas
+```
+
+📌 **Calcular desviación estándar**
+```sh
+curl -X GET http://localhost:5000/desviacion-estandar
+```
+
+📌 **Generar reporte de datos**
+```sh
+curl -X GET http://localhost:5000/reporte
+```
+
+📌 **Generar gráficos de datos**
+```sh
+curl -X GET http://localhost:5000/graficos
+```
+
+---
+
+## 🛠️ **Tecnologías Utilizadas**
+- Python (Flask)
 - PostgreSQL
 - SQLAlchemy
-- Matplotlib
-- Docker
+- Docker & Docker Compose
+- Matplotlib (para gráficos)
+
+---
+
+## 📌 **Notas Adicionales**
+- Asegúrate de tener Docker y Docker Compose instalados.
+- Si hay problemas de conexión con la base de datos, revisa el archivo `docker-compose.yml`.
+
+🚀 ¡Ahora puedes gestionar productos e inventarios de manera eficiente con esta API! 🎉
+
